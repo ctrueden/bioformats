@@ -422,7 +422,7 @@ ZZ
 my %netcdf = (
   NAME    => "netcdf",
   TITLE   => "NetCDF",
-  JAR     => "netcdf-4.0.jar",
+  JAR     => "netcdf-4.2.20.jar",
   PACKAGE => "ucar.nc2",
   LICENSE => "LGPL",
   URL     => "http://www.unidata.ucar.edu/software/netcdf-java/",

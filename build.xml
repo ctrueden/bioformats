@@ -235,7 +235,7 @@ Apache log4j
     License:   Apache
 
 NetCDF
-    JAR file:  netcdf-4.0.jar
+    JAR file:  netcdf-4.2.20.jar
     URL:       http://www.unidata.ucar.edu/software/netcdf-java/
     Notes:     used by Bio-Formats via reflection for HDF support (Imaris 5.5)
     License:   LGPL

@@ -57,7 +57,7 @@ public class NetCDFServiceImpl extends AbstractService
     "NetCDF is required to read NetCDF/HDF variants. " +
     "Please obtain the necessary JAR files from " +
     "http://loci.wisc.edu/bio-formats/bio-formats-java-library.\n" +
-    "Required JAR files are netcdf-4.0.jar and slf4j-jdk14.jar.";
+    "Required JAR files are netcdf-4.2.20.jar and slf4j-jdk14.jar.";
 
   // -- Fields --
 
