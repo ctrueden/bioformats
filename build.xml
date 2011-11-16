@@ -237,7 +237,9 @@ Apache log4j
 NetCDF
     JAR file:  netcdf-4.2.20.jar
     URL:       http://www.unidata.ucar.edu/software/netcdf-java/
-    Notes:     used by Bio-Formats via reflection for HDF support (Imaris 5.5)
+    Notes:     used by Bio-Formats via reflection for HDF support (Imaris 5.5);
+               actually a combination of netcdf and unidataCommon JARs from
+               Maven Central
     License:   LGPL
 
 Simple Logging Facade for Java API

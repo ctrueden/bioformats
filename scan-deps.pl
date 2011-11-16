@@ -427,7 +427,8 @@ my %netcdf = (
   LICENSE => "LGPL",
   URL     => "http://www.unidata.ucar.edu/software/netcdf-java/",
   NOTES   => <<ZZ,
-used by Bio-Formats via reflection for HDF support (Imaris 5.5)
+used by Bio-Formats via reflection for HDF support (Imaris 5.5); actually a
+combination of netcdf and unidataCommon JARs from Maven Central
 ZZ
   VERSION => "4.2.20"
 );
