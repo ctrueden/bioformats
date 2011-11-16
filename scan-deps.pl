@@ -429,7 +429,7 @@ my %netcdf = (
   NOTES   => <<ZZ,
 used by Bio-Formats via reflection for HDF support (Imaris 5.5)
 ZZ
-  VERSION => "4.0"
+  VERSION => "4.2.20"
 );
 
 my %omeJava = (
