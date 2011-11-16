@@ -52,64 +52,64 @@ public class NetCDFServiceTest {
   // http://www.hdfgroup.org/training/other-ex5/sample-programs/convert/Conversion.html
   private static final String TEST_FILE = "test.h5";
   private static final String[][] ATTRIBUTES = new String[][] {
-    {"/Product_Name_GLOSDS", "C19790911979120.L3_BRS_MO"},
+    {"/Product Name_GLOSDS", "C19790911979120.L3_BRS_MO"},
     {"/Title_GLOSDS", "CZCS Level-3 Browse Data"},
-    {"/Data_Center_GLOSDS", "NASA/GSFC DAAC"},
+    {"/Data Center_GLOSDS", "NASA/GSFC DAAC"},
     {"/Mission_GLOSDS", "Nimbus CZCS"},
-    {"/Mission_Characteristics_GLOSDS",
+    {"/Mission Characteristics_GLOSDS",
       "Nominal orbit: inclination = 99.3 (Sun-synchronous); node = 11:52 " +
       "a.m. local (ascending); eccentricity = <0.0009; altitude = 955 km; " +
       "ground speed = 6.4km/sec"},
     {"/Sensor_GLOSDS", "Coastal Zone Color Scanner (CZCS)"},
-    {"/Sensor_Characteristics_GLOSDS",
+    {"/Sensor Characteristics_GLOSDS",
       "Number of bands = 6; number of active bands = 6; wavelengths per " +
       "band (nm)= 443, 520, 550, 670, 750, 11500; bits per pixel = 8; " +
       "instantaneous field-of-view = .865 mrad; pixels per scan = 492; " +
       "scan rate = 8.08/sec; sample rate =3975/sec"},
-    {"/Replacement_Flag_GLOSDS", "ORIGINAL"},
-    {"/Software_ID_GLOSDS", "L3bin2hdf.c_v.1"},
-    {"/Processing_Time_GLOSDS", "1995200120000000"},
-    {"/Input_Files_GLOSDS", "c79120.Chlor.bin.mean"},
-    {"/Processing_Control_GLOSDS", "L3bin2hdf L3.info L3.input"},
-    {"/Processing_Log_GLOSDS", "L3bin2hdf_history"},
-    {"/Parent_Input_Files_GLOSDS", "c79120.Chlor.bin.mean"},
-    {"/Product_Type_GLOSDS", "month"},
-    {"/Station_Name_GLOSDS", "Wallops Flight Facility"},
-    {"/Station_Latitude_GLOSDS", "37.9272"},
-    {"/Station_Longitude_GLOSDS", "-75.4753"},
-    {"/Data_Type_GLOSDS", "GAC"},
-    {"/Parent_Number_of_Lines_GLOSDS", "1024"},
-    {"/Parent_Number_of_Columns_GLOSDS", "2048"},
-    {"/Period_Start_Year_GLOSDS", "1979"},
-    {"/Period_Start_Day_GLOSDS", "91"},
-    {"/Period_End_Year_GLOSDS", "1979"},
-    {"/Period_End_Day_GLOSDS", "120"},
-    {"/Start_Time_GLOSDS", "1979091000000000"},
-    {"/End_Time_GLOSDS", "1979120235959999"},
-    {"/Start_Year_GLOSDS", "1979"},
-    {"/Start_Day_GLOSDS", "91"},
-    {"/Start_Millisec_GLOSDS", "0"},
-    {"/End_Year_GLOSDS", "1979"},
-    {"/End_Day_GLOSDS", "120"},
-    {"/End_Millisec_GLOSDS", "86400000"},
-    {"/Map_Projection_GLOSDS", "Equidistant Cylindrical"},
-    {"/Latitude_Units_GLOSDS", "degrees North"},
-    {"/Longitude_Units_GLOSDS", "degrees East"},
-    {"/Northernmost_Latitude_GLOSDS", "90.0"},
-    {"/Southernmost_Latitude_GLOSDS", "-90.0"},
-    {"/Westernmost_Longitude_GLOSDS", "-180.0"},
-    {"/Easternmost_Longitude_GLOSDS", "180.0"},
+    {"/Replacement Flag_GLOSDS", "ORIGINAL"},
+    {"/Software ID_GLOSDS", "L3bin2hdf.c_v.1"},
+    {"/Processing Time_GLOSDS", "1995200120000000"},
+    {"/Input Files_GLOSDS", "c79120.Chlor.bin.mean"},
+    {"/Processing Control_GLOSDS", "L3bin2hdf L3.info L3.input"},
+    {"/Processing Log_GLOSDS", "L3bin2hdf_history"},
+    {"/Parent Input Files_GLOSDS", "c79120.Chlor.bin.mean"},
+    {"/Product Type_GLOSDS", "month"},
+    {"/Station Name_GLOSDS", "Wallops Flight Facility"},
+    {"/Station Latitude_GLOSDS", "37.9272"},
+    {"/Station Longitude_GLOSDS", "-75.4753"},
+    {"/Data Type_GLOSDS", "GAC"},
+    {"/Parent Number of Lines_GLOSDS", "1024"},
+    {"/Parent Number of Columns_GLOSDS", "2048"},
+    {"/Period Start Year_GLOSDS", "1979"},
+    {"/Period Start Day_GLOSDS", "91"},
+    {"/Period End Year_GLOSDS", "1979"},
+    {"/Period End Day_GLOSDS", "120"},
+    {"/Start Time_GLOSDS", "1979091000000000"},
+    {"/End Time_GLOSDS", "1979120235959999"},
+    {"/Start Year_GLOSDS", "1979"},
+    {"/Start Day_GLOSDS", "91"},
+    {"/Start Millisec_GLOSDS", "0"},
+    {"/End Year_GLOSDS", "1979"},
+    {"/End Day_GLOSDS", "120"},
+    {"/End Millisec_GLOSDS", "86400000"},
+    {"/Map Projection_GLOSDS", "Equidistant Cylindrical"},
+    {"/Latitude Units_GLOSDS", "degrees North"},
+    {"/Longitude Units_GLOSDS", "degrees East"},
+    {"/Northernmost Latitude_GLOSDS", "90.0"},
+    {"/Southernmost Latitude_GLOSDS", "-90.0"},
+    {"/Westernmost Longitude_GLOSDS", "-180.0"},
+    {"/Easternmost Longitude_GLOSDS", "180.0"},
     {"/Parameter_GLOSDS", "Chlorophyll a concentration"},
     {"/Measure_GLOSDS", "Mean"},
     {"/Units_GLOSDS", "mg m^-3"},
-    {"/Start_Column_GLOSDS", "1"},
-    {"/Column_Subsampling_Rate_GLOSDS", "6"},
-    {"/Number_of_Columns_GLOSDS", "360"},
-    {"/Start_Line_GLOSDS", "1"},
-    {"/Line_Subsampling_Rate_GLOSDS", "6"},
-    {"/Number_of_Lines_GLOSDS", "180"},
+    {"/Start Column_GLOSDS", "1"},
+    {"/Column Subsampling Rate_GLOSDS", "6"},
+    {"/Number of Columns_GLOSDS", "360"},
+    {"/Start Line_GLOSDS", "1"},
+    {"/Line Subsampling Rate_GLOSDS", "6"},
+    {"/Number of Lines_GLOSDS", "180"},
     {"/Scaling_GLOSDS", "logarithmic"},
-    {"/Scaling_Equation_GLOSDS",
+    {"/Scaling Equation_GLOSDS",
       "Base**((Slope*brs_data) + Intercept) = chlorophyll a"},
     {"/Base_GLOSDS", "10.0"},
     {"/Slope_GLOSDS", "0.012"},
@@ -125,8 +125,8 @@ public class NetCDFServiceTest {
     {"PAL_COLORMODEL", "RGB"},
     {"PAL_TYPE", "STANDARD8"},
     {"PAL_VERSION", "1.2"},
+    {"_Unsigned", "true"},
     {"_lastModified", "2003-07-09T18:33:39Z"},
-    {"_unsigned", "true"},
     },
     {
     {"CLASS", "IMAGE"},
@@ -138,8 +138,8 @@ public class NetCDFServiceTest {
     {"IMAGE_SUBCLASS", "IMAGE_INDEXED"},
     {"IMAGE_VERSION", "1.2"},
     {"PALETTE", "1680"},
+    {"_Unsigned", "true"},
     {"_lastModified", "2003-07-09T18:33:39Z"},
-    {"_unsigned", "true"},
     }
   };
 
@@ -174,13 +174,13 @@ public class NetCDFServiceTest {
     Vector<String> variables = service.getVariableList();
     assertEquals(variables.size(), 2);
 
-    assertEquals(variables.get(0), "/Raster_Image_0");
+    assertEquals(variables.get(0), "/Raster Image #0");
     assertEquals(variables.get(1), "/HDF4_PALGROUP/HDF4_PALETTE_2");
 
     Hashtable<String, Object> var1 =
       service.getVariableAttributes("/HDF4_PALGROUP/HDF4_PALETTE_2");
     Hashtable<String, Object> var2 =
-      service.getVariableAttributes("/Raster_Image_0");
+      service.getVariableAttributes("/Raster Image #0");
 
     assertEquals(var1.size(), VARS[0].length);
     assertEquals(var2.size(), VARS[1].length);

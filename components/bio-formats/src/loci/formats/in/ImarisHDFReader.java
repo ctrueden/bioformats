@@ -151,7 +151,7 @@ public class ImarisHDFReader extends FormatReader {
 
     Object image = getImageData(no, x, y, w, h);
 
-    boolean big = !isLittleEndian();
+    boolean big = isLittleEndian();
     int bpp = FormatTools.getBytesPerPixel(getPixelType());
     for (int row=0; row<h; row++) {
       int base = row * w * bpp;
@@ -256,7 +256,7 @@ public class ImarisHDFReader extends FormatReader {
 
       for (int i=1; i<getSeriesCount(); i++) {
         String groupPath =
-          "/DataSet/ResolutionLevel_" + i + "/TimePoint_0/Channel_0";
+          "DataSet/ResolutionLevel " + i + "/TimePoint 0/Channel 0";
         core[i].sizeX =
           Integer.parseInt(netcdf.getAttributeValue(groupPath + "/ImageSizeX"));
         core[i].sizeY =
@@ -410,8 +410,8 @@ public class ImarisHDFReader extends FormatReader {
     throws FormatException
   {
     int[] zct = getZCTCoords(no);
-    String path = "/DataSet/ResolutionLevel_" + series + "/TimePoint_" +
-      zct[2] + "/Channel_" + zct[1] + "/Data";
+    String path = "DataSet/ResolutionLevel " + series + "/TimePoint " +
+      zct[2] + "/Channel " + zct[1] + "/Data";
     Object image = null;
 
     // the width and height cannot be 1, because then netCDF will give us a
@@ -470,14 +470,14 @@ public class ImarisHDFReader extends FormatReader {
       else if (name.equals("ExtMin1")) minY = Double.parseDouble(value);
       else if (name.equals("ExtMin2")) minZ = Double.parseDouble(value);
 
-      if (attr.startsWith("/DataSet/ResolutionLevel_")) {
-        int slash = attr.indexOf("/", 25);
-        int n = Integer.parseInt(attr.substring(25, slash == -1 ?
+      if (attr.startsWith("DataSet/ResolutionLevel ")) {
+        int slash = attr.indexOf("/", 24);
+        int n = Integer.parseInt(attr.substring(24, slash == -1 ?
           attr.length() : slash));
         if (n == seriesCount) seriesCount++;
       }
 
-      if (attr.startsWith("/DataSetInfo/Channel_")) {
+      if (attr.startsWith("DataSetInfo/Channel ")) {
         String originalValue = value;
         for (String d : DELIMITERS) {
           if (value.indexOf(d) != -1) {
@@ -485,7 +485,7 @@ public class ImarisHDFReader extends FormatReader {
           }
         }
 
-        int underscore = attr.indexOf("_") + 1;
+        int underscore = attr.indexOf(" ") + 1;
         int cIndex = Integer.parseInt(attr.substring(underscore,
           attr.indexOf("/", underscore)));
         if (cIndex == getSizeC()) core[0].sizeC++;
