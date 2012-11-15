@@ -39,12 +39,11 @@ package loci.formats.out;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
-
-import ome.xml.model.primitives.NonNegativeInteger;
-import ome.xml.model.primitives.PositiveInteger;
 
 import loci.common.Location;
 import loci.common.RandomAccessInputStream;
@@ -60,6 +59,8 @@ import loci.formats.ome.OMEXMLMetadataImpl;
 import loci.formats.services.OMEXMLService;
 import loci.formats.tiff.IFD;
 import loci.formats.tiff.TiffSaver;
+import ome.xml.model.primitives.NonNegativeInteger;
+import ome.xml.model.primitives.PositiveInteger;
 
 /**
  * OMETiffWriter is the file format writer for OME-TIFF files.
@@ -81,7 +82,7 @@ public class OMETiffWriter extends TiffWriter {
 
   // -- Fields --
 
-  private List<Integer> seriesMap;
+  private HashSet<Integer> seriesSet = new HashSet<Integer>();
   private String[][] imageLocations;
   private OMEXMLMetadata omeMeta;
   private OMEXMLService service;
@@ -163,7 +164,7 @@ public class OMETiffWriter extends TiffWriter {
       }
 
       if (canReallyClose) {
-        seriesMap = null;
+        seriesSet.clear();
         imageLocations = null;
         omeMeta = null;
         service = null;
@@ -193,9 +194,8 @@ public class OMETiffWriter extends TiffWriter {
   public void saveBytes(int no, byte[] buf, IFD ifd, int x, int y, int w, int h)
     throws FormatException, IOException
   {
-    if (seriesMap == null) seriesMap = new ArrayList<Integer>();
-    if (!seriesMap.contains(series)) {
-      seriesMap.add(new Integer(series));
+    if (!seriesSet.contains(series)) {
+      seriesSet.add(new Integer(series));
     }
 
     super.saveBytes(no, buf, ifd, x, y, w, h);
@@ -307,7 +307,9 @@ public class OMETiffWriter extends TiffWriter {
     int sizeT = omeMeta.getPixelsSizeT(series).getValue().intValue();
 
     int imageCount = getPlaneCount();
-    int ifdCount = seriesMap.size();
+    int ifdCount = seriesSet.size();
+    // CTR START HERE: There is no way the IFD count can be assumed to match
+    // the number of series that we have seen mentioned so far!
 
     if (imageCount == 0) {
       omeMeta.setTiffDataPlaneCount(new NonNegativeInteger(0), series, 0);
