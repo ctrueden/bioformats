@@ -2,7 +2,7 @@
  * #%L
  * OME Bio-Formats package for reading and converting biological file formats.
  * %%
- * Copyright (C) 2005 - 2012 Open Microscopy Environment:
+ * Copyright (C) 2005 - 2013 Open Microscopy Environment:
  *   - Board of Regents of the University of Wisconsin-Madison
  *   - Glencoe Software, Inc.
  *   - University of Dundee
@@ -1046,6 +1046,13 @@ public class MetamorphReader extends BaseTiffReader {
 
       if (getSizeC() == 1) {
         ms0.sizeC = uniqueWavelengths.size();
+
+        if (getSizeC() < getImageCount() &&
+          getSizeC() > (getImageCount() - getSizeC()) &&
+          (getImageCount() % getSizeC()) != 0)
+        {
+          ms0.sizeC = getImageCount();
+        }
       }
 
       IFDList tempIFDs = new IFDList();

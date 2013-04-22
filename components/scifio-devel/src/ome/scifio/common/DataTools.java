@@ -2,7 +2,7 @@
  * #%L
  * OME SCIFIO package for reading and converting scientific file formats.
  * %%
- * Copyright (C) 2005 - 2012 Open Microscopy Environment:
+ * Copyright (C) 2005 - 2013 Open Microscopy Environment:
  *   - Board of Regents of the University of Wisconsin-Madison
  *   - Glencoe Software, Inc.
  *   - University of Dundee
@@ -769,7 +769,7 @@ public final class DataTools {
     StringBuffer buf = new StringBuffer(s);
     for (int i=0; i<buf.length(); i++) {
       char c = buf.charAt(i);
-      if (c != '\t' && c != '\n' && (c < ' ' || c > '~')) {
+      if (c != '\t' && c != '\n' && Character.isISOControl(c)) {
         buf = buf.deleteCharAt(i--);
       }
     }

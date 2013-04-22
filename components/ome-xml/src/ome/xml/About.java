@@ -2,7 +2,7 @@
  * #%L
  * OME-XML Java library for working with OME-XML metadata structures.
  * %%
- * Copyright (C) 2006 - 2012 Open Microscopy Environment:
+ * Copyright (C) 2006 - 2013 Open Microscopy Environment:
  *   - Massachusetts Institute of Technology
  *   - National Institutes of Health
  *   - University of Dundee
@@ -52,7 +52,7 @@ public final class About {
   /** URL for OME-XML Java library web page. */
   public static final String URL_OME_XML_LIBRARY =
     "http://www.openmicroscopy.org/" +
-    "site/support/file-formats/ome-xml-java-library";
+    "site/support/ome-model/ome-xml/java-library.html";
 
   // -- Static utility methods --
 

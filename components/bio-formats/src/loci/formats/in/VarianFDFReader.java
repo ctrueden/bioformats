@@ -2,7 +2,7 @@
  * #%L
  * OME Bio-Formats package for reading and converting biological file formats.
  * %%
- * Copyright (C) 2005 - 2012 Open Microscopy Environment:
+ * Copyright (C) 2005 - 2013 Open Microscopy Environment:
  *   - Board of Regents of the University of Wisconsin-Madison
  *   - Glencoe Software, Inc.
  *   - University of Dundee
@@ -210,8 +210,12 @@ public class VarianFDFReader extends FormatReader {
     CoreMetadata m = core.get(0);
     boolean storedFloats = false;
     boolean multifile = false;
-    while (true) {
-      String line = in.readLine().trim();
+
+    String data = in.readString(Character.toString((char) 0x0c));
+    String[] lines = data.split("\n");
+
+    for (String line : lines) {
+      line = line.trim();
       if (line.length() == 0) break;
       if (line.startsWith("#")) continue;
 

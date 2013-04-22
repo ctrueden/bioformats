@@ -2,7 +2,7 @@
  * #%L
  * OME Bio-Formats package for reading and converting biological file formats.
  * %%
- * Copyright (C) 2005 - 2012 Open Microscopy Environment:
+ * Copyright (C) 2005 - 2013 Open Microscopy Environment:
  *   - Board of Regents of the University of Wisconsin-Madison
  *   - Glencoe Software, Inc.
  *   - University of Dundee
@@ -82,6 +82,13 @@ public class OperettaReader extends FormatReader {
   }
 
   // -- IFormatReader API methods --
+
+  /* @see loci.formats.IFormatReader#getRequiredDirectories(String[]) */
+  public int getRequiredDirectories(String[] files)
+    throws FormatException, IOException
+  {
+    return 1;
+  }
 
   /* @see loci.formats.IFormatReader#isSingleFile(String) */
   public boolean isSingleFile(String id) throws FormatException, IOException {
@@ -272,6 +279,8 @@ public class OperettaReader extends FormatReader {
       }
     }
 
+    reader = new MinimalTiffReader();
+
     for (int i=0; i<seriesCount; i++) {
       CoreMetadata ms = new CoreMetadata();
       core.add(ms);
@@ -281,16 +290,18 @@ public class OperettaReader extends FormatReader {
       ms.sizeC = uniqueCs.size();
       ms.sizeT = uniqueTs.size();
       ms.dimensionOrder = "XYCZT";
-
-      if (reader == null) {
-        reader = new MinimalTiffReader();
-      }
-      reader.setId(planes[i][0].filename);
-      ms.pixelType = reader.getPixelType();
       ms.rgb = false;
       ms.imageCount = getSizeZ() * getSizeC() * getSizeT();
-      ms.littleEndian = reader.isLittleEndian();
-      reader.close();
+
+      RandomAccessInputStream s =
+        new RandomAccessInputStream(planes[i][0].filename);
+      TiffParser parser = new TiffParser(s);
+      parser.setDoCaching(false);
+
+      IFD firstIFD = parser.getFirstIFD();
+      ms.littleEndian = firstIFD.isLittleEndian();
+      ms.pixelType = firstIFD.getPixelType();
+      s.close();
     }
 
     // populate the MetadataStore

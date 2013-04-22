@@ -2,7 +2,7 @@
  * #%L
  * OME SCIFIO package for reading and converting scientific file formats.
  * %%
- * Copyright (C) 2005 - 2012 Open Microscopy Environment:
+ * Copyright (C) 2005 - 2013 Open Microscopy Environment:
  *   - Board of Regents of the University of Wisconsin-Madison
  *   - Glencoe Software, Inc.
  *   - University of Dundee
@@ -384,7 +384,20 @@ public class MinimalTiffReader extends FormatReader {
   public int getOptimalTileHeight() {
     FormatTools.assertId(currentId, true, 1);
     try {
-      return (int) ifds.get(0).getTileLength();
+      int height = (int) ifds.get(0).getTileLength();
+      if (height <= 0) {
+        height = getSizeY();
+      }
+
+      // Some TIFF files only store a single tile, even if the image is
+      // very, very large.  In those cases, we don't want to open the whole
+      // tile if we can avoid it.
+      if (DataTools.safeMultiply32(height, getOptimalTileWidth()) >
+        10 * 1024 * 1024)
+      {
+        return super.getOptimalTileHeight();
+      }
+      return height;
     }
     catch (FormatException e) {
       LOGGER.debug("Could not retrieve tile height", e);

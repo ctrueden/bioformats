@@ -2,7 +2,7 @@
  * #%L
  * OME SCIFIO package for reading and converting scientific file formats.
  * %%
- * Copyright (C) 2005 - 2012 Open Microscopy Environment:
+ * Copyright (C) 2005 - 2013 Open Microscopy Environment:
  *   - Board of Regents of the University of Wisconsin-Madison
  *   - Glencoe Software, Inc.
  *   - University of Dundee
@@ -439,9 +439,10 @@ public abstract class ReaderWrapper implements IFormatReader {
     List<CoreMetadata> oldcore = reader.getCoreMetadataList();
     List<CoreMetadata> newcore = new ArrayList<CoreMetadata>();
 
-    // Note that this only works with flattened resolutions
     for (int s=0; s<oldcore.size(); s++) {
-      newcore.add(oldcore.get(s).clone(this, s));
+      CoreMetadata newMeta = oldcore.get(s).clone(this, s);
+      newMeta.resolutionCount = oldcore.get(s).resolutionCount;
+      newcore.add(newMeta);
     }
 
     return newcore;
@@ -471,6 +472,12 @@ public abstract class ReaderWrapper implements IFormatReader {
 
   public boolean isSingleFile(String id) throws FormatException, IOException {
     return reader.isSingleFile(id);
+  }
+
+  public int getRequiredDirectories(String[] files)
+    throws FormatException, IOException
+  {
+    return reader.getRequiredDirectories(files);
   }
 
   public String getDatasetStructureDescription() {

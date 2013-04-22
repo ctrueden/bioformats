@@ -1,24 +1,26 @@
-//
-// BaseZeissReader.java
-//
-
 /*
-OME Bio-Formats package for reading and converting biological file formats.
-Copyright (C) 2005-@year@ UW-Madison LOCI and Glencoe Software, Inc.
-
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * #%L
+ * OME Bio-Formats package for reading and converting biological file formats.
+ * %%
+ * Copyright (C) 2005 - 2013 Open Microscopy Environment:
+ *   - Board of Regents of the University of Wisconsin-Madison
+ *   - Glencoe Software, Inc.
+ *   - University of Dundee
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 2 of the 
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public 
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-2.0.html>.
+ * #L%
  */
 
 package loci.formats.in;
@@ -462,7 +464,7 @@ public abstract class BaseZeissReader extends FormatReader {
               store.setPointID(shapeID, roiIndex, shapeIndex);
               store.setPointX(shape.points[(i*2)], roiIndex, shapeIndex);
               store.setPointY(shape.points[(i*2)+1], roiIndex, shapeIndex);
-              if (shape.text != null && i == 0 && (shape.type == FeatureType.MEAS_POINT || shape.type == FeatureType.MEAS_POINTS))
+              if (shape.text != null && i == 0)
                 store.setPointText(shape.text, roiIndex, shapeIndex);
               shapeIndex++;
             }
@@ -476,7 +478,7 @@ public abstract class BaseZeissReader extends FormatReader {
             store.setLineY1(shape.points[1], roiIndex, shapeIndex);
             store.setLineX2(shape.points[2], roiIndex, shapeIndex);
             store.setLineY2(shape.points[3], roiIndex, shapeIndex);
-            if (shape.text != null && shape.type == FeatureType.MEAS_LINE)
+            if (shape.text != null)
               store.setLineText(shape.text, roiIndex, shapeIndex);
             shapeIndex++;
             break;
@@ -506,9 +508,7 @@ public abstract class BaseZeissReader extends FormatReader {
               store.setLineY1(shape.points[(i*2)+1], roiIndex, shapeIndex);
               store.setLineX2(shape.points[(i*2)+2], roiIndex, shapeIndex);
               store.setLineY2(shape.points[(i*2)+3], roiIndex, shapeIndex);
-              if (shape.text != null && i == caliperPoints - 2 && // Store label on baseline
-                  shape.type == FeatureType.MEAS_CALIPER || shape.type == FeatureType.MEAS_MULTIPLE_CALIPER ||
-                  shape.type == FeatureType.MEAS_DISTANCE || shape.type == FeatureType.MEAS_MULTIPLE_DISTANCE)
+              if (shape.text != null && i == caliperPoints - 2) // Store label on baseline
                 store.setLineText(shape.text, roiIndex, shapeIndex);
               shapeIndex++;
             }
@@ -525,8 +525,7 @@ public abstract class BaseZeissReader extends FormatReader {
               store.setLineY1(shape.points[(i*2)+1], roiIndex, shapeIndex);
               store.setLineX2(shape.points[(i*2)+2], roiIndex, shapeIndex);
               store.setLineY2(shape.points[(i*2)+3], roiIndex, shapeIndex);
-              if (shape.text != null && i == 0 &&
-                  (shape.type == FeatureType.MEAS_ANGLE3 || shape.type == FeatureType.MEAS_ANGLE4)) // ??
+              if (shape.text != null && i == 0)
                 store.setLineText(shape.text, roiIndex, shapeIndex);
               shapeIndex++;
             }
@@ -543,7 +542,7 @@ public abstract class BaseZeissReader extends FormatReader {
             store.setEllipseY(shape.points[1], roiIndex, shapeIndex);
             store.setEllipseRadiusX(radius, roiIndex, shapeIndex);
             store.setEllipseRadiusY(radius, roiIndex, shapeIndex);
-            if (shape.text != null && shape.type == FeatureType.MEAS_ELLIPSE)
+            if (shape.text != null)
               store.setEllipseText(shape.text, roiIndex, shapeIndex);
             shapeIndex++;
             shapeID = MetadataTools.createLSID("Shape", roiIndex, shapeIndex);
@@ -605,16 +604,12 @@ public abstract class BaseZeissReader extends FormatReader {
             if (closed) {
               store.setPolygonID(shapeID, roiIndex, shapeIndex);
               store.setPolygonPoints(points.toString(), roiIndex, shapeIndex);
-              if (shape.text != null &&
-                  shape.type == FeatureType.MEAS_POLYLINE_OPEN || shape.type == FeatureType.MEAS_POLYLINE_CLOSED ||
-                  shape.type == FeatureType.MEAS_SPLINE_OPEN || shape.type == FeatureType.MEAS_SPLINE_CLOSED)
+              if (shape.text != null)
                   store.setPolygonText(shape.text, roiIndex, shapeIndex);
             } else {
               store.setPolylineID(shapeID, roiIndex, shapeIndex);
               store.setPolylinePoints(points.toString(), roiIndex, shapeIndex);
-              if (shape.text != null &&
-                  shape.type == FeatureType.MEAS_POLYLINE_OPEN || shape.type == FeatureType.MEAS_POLYLINE_CLOSED ||
-                  shape.type == FeatureType.MEAS_SPLINE_OPEN || shape.type == FeatureType.MEAS_SPLINE_CLOSED)
+              if (shape.text != null)
                   store.setPolylineText(shape.text, roiIndex, shapeIndex);
             }
             shapeIndex++;
@@ -653,9 +648,7 @@ public abstract class BaseZeissReader extends FormatReader {
             shapeID = MetadataTools.createLSID("Shape", roiIndex, shapeIndex);
             store.setPolygonID(shapeID, roiIndex, shapeIndex);
             store.setPolygonPoints(points.toString(), roiIndex, shapeIndex);
-            if (shape.text != null &&
-                shape.type == FeatureType.MEAS_POLYLINE_OPEN || shape.type == FeatureType.MEAS_POLYLINE_CLOSED ||
-                shape.type == FeatureType.MEAS_SPLINE_OPEN || shape.type == FeatureType.MEAS_SPLINE_CLOSED)
+            if (shape.text != null)
               store.setPolygonText(shape.text, roiIndex, shapeIndex);
             shapeIndex++;
             break;
@@ -667,7 +660,7 @@ public abstract class BaseZeissReader extends FormatReader {
             store.setEllipseY((shape.points[1] + shape.points[5])/2, roiIndex, shapeIndex);
             store.setEllipseRadiusX((shape.points[4] - shape.points[0])/2.0, roiIndex, shapeIndex);
             store.setEllipseRadiusY((shape.points[5] - shape.points[1])/2.0, roiIndex, shapeIndex);
-            if (shape.text != null) // Done for both types since annotations are permitted labels
+            if (shape.text != null)
               store.setEllipseText(shape.text, roiIndex, shapeIndex);
             shapeIndex++;
             break;
@@ -681,7 +674,7 @@ public abstract class BaseZeissReader extends FormatReader {
               store.setLineY1(shape.points[(i*2)+1], roiIndex, shapeIndex);
               store.setLineX2(shape.points[(i*2)+2], roiIndex, shapeIndex);
               store.setLineY2(shape.points[(i*2)+3], roiIndex, shapeIndex);
-              if (shape.text != null && i == 0 && shape.type == FeatureType.MEAS_LENGTH)
+              if (shape.text != null && i == 0)
                 store.setLineText(shape.text, roiIndex, shapeIndex);
               shapeIndex++;
             }
@@ -1166,7 +1159,7 @@ public abstract class BaseZeissReader extends FormatReader {
     public String toString()
     {
       String s = new String();
-      s += "  " + keyid + "(" + getKey() + ") = " + getValue();
+      s += keyid + " (" + getKey() + ") = " + getValue();
       switch (context)
       {
         case MAIN:
@@ -1178,7 +1171,6 @@ public abstract class BaseZeissReader extends FormatReader {
         default:
           s+= " [unknown]"; break;
       }
-      s+= "\n";
       return s;
     }
 
@@ -2109,7 +2101,7 @@ public abstract class BaseZeissReader extends FormatReader {
       s += "  name: " + name + "\n";
       s += "  text: " + text + "\n";
       //s += "  Zpos: " + zpos;
-      s += "  tagID:" + tagID.getKey() + "\n";
+      s += "  tagID: " + tagID.getKey() + "\n";
       s += "  handleSize:" + handleSize + "\n";
       s += "  pointCount:" + pointCount + "\n    ";
       for (double point : points)

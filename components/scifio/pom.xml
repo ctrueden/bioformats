@@ -24,7 +24,6 @@
   <licenses>
     <license>
       <name>Simplified BSD License</name>
-      <url>${license.server}/scifio/license.txt</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
@@ -56,6 +55,16 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>turbojpeg</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.scijava</groupId>
+      <artifactId>native-lib-loader</artifactId>
+      <version>2.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
       <groupId>com.jgoodies</groupId>
       <artifactId>forms</artifactId>
       <version>1.2.1</version>
@@ -68,19 +77,6 @@
 
     <!-- NB: dependency:analyze has false warning about xml-apis:xml-apis. -->
 
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>1.2.14</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <!-- NB: We want this, despite warning from dependency:analyze. -->
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-      <version>1.5.10</version>
-      <scope>runtime</scope>
-    </dependency>
     <dependency>
       <!-- NB: We want this, despite warning from dependency:analyze. -->
       <groupId>xalan</groupId>
@@ -102,16 +98,202 @@
       <version>5.12.1</version>
       <scope>test</scope>
     </dependency>
+
   </dependencies>
+
+  <properties>
+    <project.rootdir>${basedir}/../..</project.rootdir>
+    <xsdfu.basepath>../xsd-fu</xsdfu.basepath>
+    <xsdfu.metadatapath>${basedir}/target/generated-sources/loci/formats/meta</xsdfu.metadatapath>
+    <xsdfu.omepath>${basedir}/target/generated-sources/loci/formats/ome</xsdfu.omepath>
+  </properties>
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+	<executions>
+	  <!-- Generate the metadata interfaces -->
+	  <execution>
+	    <id>xsd-fu-metadata-store</id>
+	    <phase>generate-sources</phase>
+	    <goals>
+	      <goal>exec</goal>
+	    </goals>
+	    <configuration>
+	      <executable>python</executable>
+	      <workingDirectory>${xsdfu.basepath}</workingDirectory>
+	      <arguments>
+		<argument>xsd-fu</argument>
+		<argument>metadata_store</argument>
+		<argument>-o</argument>
+		<argument>${xsdfu.metadatapath}/</argument>
+		<argument>${project.rootdir}/${xsdfu.ome}</argument>
+		<argument>${project.rootdir}/${xsdfu.binaryfile}</argument>
+		<argument>${project.rootdir}/${xsdfu.roi}</argument>
+		<argument>${project.rootdir}/${xsdfu.sa}</argument>
+		<argument>${project.rootdir}/${xsdfu.spw}</argument>
+	      </arguments>
+	    </configuration>
+	  </execution>
+	  <execution>
+	    <id>xsd-fu-metadata-retrieve</id>
+	    <phase>generate-sources</phase>
+	    <goals>
+	      <goal>exec</goal>
+	    </goals>
+	    <configuration>
+	      <executable>python</executable>
+	      <workingDirectory>${xsdfu.basepath}</workingDirectory>
+	      <arguments>
+		<argument>xsd-fu</argument>
+		<argument>metadata_retrieve</argument>
+		<argument>-o</argument>
+		<argument>${xsdfu.metadatapath}/</argument>
+		<argument>${project.rootdir}/${xsdfu.ome}</argument>
+		<argument>${project.rootdir}/${xsdfu.binaryfile}</argument>
+		<argument>${project.rootdir}/${xsdfu.roi}</argument>
+		<argument>${project.rootdir}/${xsdfu.sa}</argument>
+		<argument>${project.rootdir}/${xsdfu.spw}</argument>
+	      </arguments>
+	    </configuration>
+	  </execution>
+	  <!-- Generate the metadata implementations -->
+	  <execution>
+	    <id>xsd-fu-metadata-aggregate</id>
+	    <phase>generate-sources</phase>
+	    <goals>
+	      <goal>exec</goal>
+	    </goals>
+	    <configuration>
+	      <executable>python</executable>
+	      <workingDirectory>${xsdfu.basepath}</workingDirectory>
+	      <arguments>
+		<argument>xsd-fu</argument>
+		<argument>metadata_aggregate</argument>
+		<argument>-o</argument>
+		<argument>${xsdfu.metadatapath}/</argument>
+		<argument>${project.rootdir}/${xsdfu.ome}</argument>
+		<argument>${project.rootdir}/${xsdfu.binaryfile}</argument>
+		<argument>${project.rootdir}/${xsdfu.roi}</argument>
+		<argument>${project.rootdir}/${xsdfu.sa}</argument>
+		<argument>${project.rootdir}/${xsdfu.spw}</argument>
+	      </arguments>
+	    </configuration>
+	  </execution>
+	  <execution>
+	    <id>xsd-fu-dummy-metadata</id>
+	    <phase>generate-sources</phase>
+	    <goals>
+	      <goal>exec</goal>
+	    </goals>
+	    <configuration>
+	      <executable>python</executable>
+	      <workingDirectory>${xsdfu.basepath}</workingDirectory>
+	      <arguments>
+		<argument>xsd-fu</argument>
+		<argument>dummy_metadata</argument>
+		<argument>-o</argument>
+		<argument>${xsdfu.metadatapath}/</argument>
+		<argument>${project.rootdir}/${xsdfu.ome}</argument>
+		<argument>${project.rootdir}/${xsdfu.binaryfile}</argument>
+		<argument>${project.rootdir}/${xsdfu.roi}</argument>
+		<argument>${project.rootdir}/${xsdfu.sa}</argument>
+		<argument>${project.rootdir}/${xsdfu.spw}</argument>
+	      </arguments>
+	    </configuration>
+	  </execution>
+	  <execution>
+	    <id>xsd-fu-filter-metadata</id>
+	    <phase>generate-sources</phase>
+	    <goals>
+	      <goal>exec</goal>
+	    </goals>
+	    <configuration>
+	      <executable>python</executable>
+	      <workingDirectory>${xsdfu.basepath}</workingDirectory>
+	      <arguments>
+		<argument>xsd-fu</argument>
+		<argument>filter_metadata</argument>
+		<argument>-o</argument>
+		<argument>${xsdfu.metadatapath}/</argument>
+		<argument>${project.rootdir}/${xsdfu.ome}</argument>
+		<argument>${project.rootdir}/${xsdfu.binaryfile}</argument>
+		<argument>${project.rootdir}/${xsdfu.roi}</argument>
+		<argument>${project.rootdir}/${xsdfu.sa}</argument>
+		<argument>${project.rootdir}/${xsdfu.spw}</argument>
+	      </arguments>
+	    </configuration>
+	  </execution>
+
+	  <execution>
+	    <id>xsd-fu-omexml-metadata</id>
+	    <phase>generate-sources</phase>
+	    <goals>
+	      <goal>exec</goal>
+	    </goals>
+	    <configuration>
+	      <executable>python</executable>
+	      <workingDirectory>${xsdfu.basepath}</workingDirectory>
+	      <arguments>
+		<argument>xsd-fu</argument>
+		<argument>omexml_metadata</argument>
+		<argument>-o</argument>
+		<argument>${xsdfu.omepath}/</argument>
+		<argument>${project.rootdir}/${xsdfu.ome}</argument>
+		<argument>${project.rootdir}/${xsdfu.binaryfile}</argument>
+		<argument>${project.rootdir}/${xsdfu.roi}</argument>
+		<argument>${project.rootdir}/${xsdfu.sa}</argument>
+		<argument>${project.rootdir}/${xsdfu.spw}</argument>
+	      </arguments>
+	    </configuration>
+	  </execution>
+	</executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>1.4</version>
+        <executions>
+          <execution>
+            <id>add-source</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>target/generated-sources</source>
+              </sources>
+            </configuration>
+          </execution>
+	  <execution>
+	    <id>add-wsdl-resource</id>
+	    <phase>generate-resources</phase>
+	    <goals>
+	      <goal>add-resource</goal>
+	    </goals>
+	    <configuration>
+	      <resources>
+		<resource>
+		  <directory>target/generated-sources</directory>
+		  <targetPath>target/classes</targetPath>
+		</resource>
+	      </resources>
+	    </configuration>
+	  </execution>
+        </executions>
+      </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <suiteXmlFiles>
             <suiteXmlFile>test/loci/formats/utests/testng.xml</suiteXmlFile>
           </suiteXmlFiles>
+          <additionalClasspathElements>
+            <additionalClasspathElement>${basedir}/../../ant/</additionalClasspathElement>
+          </additionalClasspathElements>
         </configuration>
       </plugin>
       <plugin>
