@@ -2,7 +2,7 @@
  * #%L
  * OME SCIFIO package for reading and converting scientific file formats.
  * %%
- * Copyright (C) 2005 - 2012 Open Microscopy Environment:
+ * Copyright (C) 2005 - 2013 Open Microscopy Environment:
  *   - Board of Regents of the University of Wisconsin-Madison
  *   - Glencoe Software, Inc.
  *   - University of Dundee
@@ -170,7 +170,7 @@ public class ChannelSeparator extends ReaderWrapper {
       int c = getSizeC() / reader.getEffectiveSizeC();
       int source = getOriginalIndex(no);
       int channel = no % c;
-      int series = getSeries();
+      int series = getCoreIndex();
       int bpp = FormatTools.getBytesPerPixel(getPixelType());
 
       if (source != lastImageIndex || series != lastImageSeries ||

@@ -2,7 +2,7 @@
  * #%L
  * OME SCIFIO package for reading and converting scientific file formats.
  * %%
- * Copyright (C) 2005 - 2012 Open Microscopy Environment:
+ * Copyright (C) 2005 - 2013 Open Microscopy Environment:
  *   - Board of Regents of the University of Wisconsin-Madison
  *   - Glencoe Software, Inc.
  *   - University of Dundee
@@ -102,9 +102,15 @@ public class ICSWriter extends FormatWriter {
 
     MetadataRetrieve meta = getMetadataRetrieve();
 
+    int rgbChannels = getSamplesPerPixel();
+
     String order = meta.getPixelsDimensionOrder(series).getValue();
     int sizeZ = meta.getPixelsSizeZ(series).getValue().intValue();
     int sizeC = meta.getChannelCount(series);
+    if (rgbChannels <= sizeC) {
+      sizeC /= rgbChannels;
+    }
+
     int sizeT = meta.getPixelsSizeT(series).getValue().intValue();
     int planes = sizeZ * sizeC * sizeT;
 
@@ -119,7 +125,6 @@ public class ICSWriter extends FormatWriter {
     int pixelType =
       FormatTools.pixelTypeFromString(meta.getPixelsType(series).toString());
     int bytesPerPixel = FormatTools.getBytesPerPixel(pixelType);
-    int rgbChannels = getSamplesPerPixel();
     int planeSize = sizeX * sizeY * rgbChannels * bytesPerPixel;
 
     if (!initialized[series][realIndex]) {

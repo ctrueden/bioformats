@@ -2,7 +2,7 @@
  * #%L
  * OME SCIFIO package for reading and converting scientific file formats.
  * %%
- * Copyright (C) 2005 - 2012 Open Microscopy Environment:
+ * Copyright (C) 2005 - 2013 Open Microscopy Environment:
  *   - Board of Regents of the University of Wisconsin-Madison
  *   - Glencoe Software, Inc.
  *   - University of Dundee
@@ -949,8 +949,20 @@ public final class FormatTools {
     if (bytes.length == 1) return bytes[0];
     int rgbChannelCount = reader.getRGBChannelCount();
     byte[] rtn = new byte[rgbChannelCount * bytes[0].length];
-    for (int i=0; i<rgbChannelCount; i++) {
-      System.arraycopy(bytes[i], 0, rtn, bytes[0].length * i, bytes[i].length);
+    
+    if (!reader.isInterleaved()) {
+      for (int i=0; i<rgbChannelCount; i++) {
+        System.arraycopy(bytes[i], 0, rtn, bytes[0].length * i, bytes[i].length);
+      }
+    }
+    else {
+      int bpp = FormatTools.getBytesPerPixel(reader.getPixelType());
+
+      for (int i=0; i<bytes[0].length/bpp; i+=bpp) {
+        for (int j=0; j<rgbChannelCount; j++) {
+          System.arraycopy(bytes[j], i, rtn, (i * rgbChannelCount) + j * bpp, bpp);
+        }
+      }
     }
     return rtn;
   }

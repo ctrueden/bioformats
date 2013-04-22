@@ -2,7 +2,7 @@
  * #%L
  * OME SCIFIO package for reading and converting scientific file formats.
  * %%
- * Copyright (C) 2005 - 2012 Open Microscopy Environment:
+ * Copyright (C) 2005 - 2013 Open Microscopy Environment:
  *   - Board of Regents of the University of Wisconsin-Madison
  *   - Glencoe Software, Inc.
  *   - University of Dundee
@@ -38,6 +38,7 @@ package loci.formats.in;
 
 import java.io.IOException;
 
+import loci.common.DataTools;
 import loci.common.RandomAccessInputStream;
 import loci.formats.CoreMetadata;
 import loci.formats.FormatException;
@@ -149,6 +150,16 @@ public class FitsReader extends FormatReader {
     m.sizeC = 1;
     m.sizeT = 1;
     if (getSizeZ() == 0) m.sizeZ = 1;
+
+    // correct for truncated files
+    int planeSize =
+      getSizeX() * getSizeY() * FormatTools.getBytesPerPixel(getPixelType());
+    if (DataTools.safeMultiply64(planeSize, getSizeZ()) >
+      (in.length() - pixelOffset))
+    {
+      m.sizeZ = (int) ((in.length() - pixelOffset) / planeSize);
+    }
+
     m.imageCount = m.sizeZ;
     m.rgb = false;
     m.littleEndian = false;

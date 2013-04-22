@@ -2,7 +2,7 @@
  * #%L
  * OME Bio-Formats package for reading and converting biological file formats.
  * %%
- * Copyright (C) 2005 - 2012 Open Microscopy Environment:
+ * Copyright (C) 2005 - 2013 Open Microscopy Environment:
  *   - Board of Regents of the University of Wisconsin-Madison
  *   - Glencoe Software, Inc.
  *   - University of Dundee
@@ -620,7 +620,7 @@ public class ND2Handler extends BaseHandler {
 
   // -- Helper methods --
 
-  private void parseKeyAndValue(String key, String value, String runtype) {
+  public void parseKeyAndValue(String key, String value, String runtype) {
     if (key == null || value == null) return;
     CoreMetadata ms0 = core.get(0);
     metadata.put(key, value);
@@ -791,6 +791,9 @@ public class ND2Handler extends BaseHandler {
         }
         else {
           String[] v = t.split(":");
+          if (v.length == 0) {
+            continue;
+          }
           if (v.length == 2) {
             v[1] = v[1].trim();
             if (v[0].equals("Name")) {
@@ -878,6 +881,18 @@ public class ND2Handler extends BaseHandler {
     }
     else if (key.equals("Name") && channelNames.size() < ms0.sizeC) {
       channelNames.add(value);
+    }
+    else if (key.equals("Z Stack Loop")) {
+      int v = Integer.parseInt(value);
+      if (v <= nImages) {
+        core.get(0).sizeZ = v;
+      }
+    }
+    else if (key.equals("Time Loop")) {
+      int v = Integer.parseInt(value);
+      if (v <= nImages) {
+        core.get(0).sizeT = v;
+      }
     }
   }
 

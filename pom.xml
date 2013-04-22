@@ -8,7 +8,7 @@
   <parent>
     <groupId>org.scijava</groupId>
     <artifactId>pom-scijava</artifactId>
-    <version>1.19</version>
+    <version>1.28</version>
   </parent>
 
   <groupId>loci</groupId>
@@ -38,12 +38,22 @@
     <module>components/ome-xml</module>
     <module>components/scifio</module>
     <module>components/scifio-devel</module>
+    <module>components/scifio-tools</module>
     <module>components/test-suite</module>
     <module>components/stubs/lwf-stubs</module>
+    <module>components/turbojpeg</module>
+    <module>components/xsd-fu</module>
   </modules>
 
   <properties>
-    <license.server>http://code.imagej.net/licenses</license.server>
+    <project.rootdir>${basedir}</project.rootdir>
+    <xsdfu.schemaver>2012-06</xsdfu.schemaver>
+    <xsdfu.schemapath>components/specification/released-schema/${xsdfu.schemaver}</xsdfu.schemapath>
+    <xsdfu.ome>${xsdfu.schemapath}/ome.xsd</xsdfu.ome>
+    <xsdfu.binaryfile>${xsdfu.schemapath}/BinaryFile.xsd</xsdfu.binaryfile>
+    <xsdfu.roi>${xsdfu.schemapath}/ROI.xsd</xsdfu.roi>
+    <xsdfu.sa>${xsdfu.schemapath}/SA.xsd</xsdfu.sa>
+    <xsdfu.spw>${xsdfu.schemapath}/SPW.xsd</xsdfu.spw>
   </properties>
 
   <build>
@@ -56,6 +66,10 @@
           <exclude>**/*.java</exclude>
           <exclude>**/package.html</exclude>
         </excludes>
+      </resource>
+      <resource>
+        <targetPath>META-INF/lib</targetPath>
+        <directory>${project.basedir}/lib</directory>
       </resource>
     </resources>
     <testResources>
@@ -87,11 +101,12 @@
         <artifactId>license-maven-plugin</artifactId>
         <configuration>
           <licenseName>gpl_v2</licenseName>
-          <licenseResolver>${license.server}</licenseResolver>
+          <licenseResolver>file://${project.rootdir}/license</licenseResolver>
           <organizationName>Open Microscopy Environment:
   - Board of Regents of the University of Wisconsin-Madison
   - Glencoe Software, Inc.
   - University of Dundee</organizationName>
+          <addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
           <canUpdateDescription>true</canUpdateDescription>
           <roots>
             <root>src</root>

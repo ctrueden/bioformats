@@ -2,7 +2,7 @@
  * #%L
  * OME database I/O package for communicating with OME and OMERO servers.
  * %%
- * Copyright (C) 2005 - 2012 Open Microscopy Environment:
+ * Copyright (C) 2005 - 2013 Open Microscopy Environment:
  *   - Board of Regents of the University of Wisconsin-Madison
  *   - Glencoe Software, Inc.
  *   - University of Dundee
@@ -43,7 +43,6 @@ import loci.formats.FormatReader;
 import loci.formats.FormatTools;
 import loci.formats.MetadataTools;
 import loci.formats.meta.MetadataStore;
-import loci.formats.tools.ImageInfo;
 import ome.xml.model.primitives.PositiveFloat;
 import ome.xml.model.primitives.PositiveInteger;
 import ome.xml.model.primitives.Timestamp;
@@ -478,19 +477,6 @@ public class OmeroReader extends FormatReader {
       throw e;
     }
     omeroReader.close();
-
-    // delegate the heavy lifting to Bio-Formats ImageInfo utility
-    final ImageInfo imageInfo = new ImageInfo();
-    imageInfo.setReader(omeroReader); // override default image reader
-
-    String[] readArgs = new String[args.length + 1];
-    System.arraycopy(args, 0, readArgs, 0, args.length);
-    readArgs[args.length] = id;
-
-    if (!imageInfo.testRead(readArgs)) {
-      omeroReader.close();
-      System.exit(1);
-    }
   }
 
 }

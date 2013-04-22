@@ -28,7 +28,9 @@ Type "ant -p" for a list of targets.
       compile-poi-loci,
       compile-scifio,
       compile-scifio-devel,
-      compile-tests"
+      compile-scifio-tools,
+      compile-tests,
+      compile-turbojpeg"
     description="compile LOCI software packages"/>
 
   <target name="jars"
@@ -48,7 +50,10 @@ Type "ant -p" for a list of targets.
       jar-poi-loci,
       jar-scifio,
       jar-scifio-devel,
-      jar-tests"
+      jar-scifio-tools,
+      jar-specification,
+      jar-tests,
+      jar-turbojpeg"
     description="generate JAR files for LOCI software packages"/>
 
   <target name="osgi"
@@ -67,7 +72,9 @@ Type "ant -p" for a list of targets.
       osgi-poi-loci,
       osgi-scifio,
       osgi-scifio-devel,
-      osgi-tests"
+      osgi-scifio-tools,
+      osgi-tests,
+      osgi-turbojpeg"
     description="generate OSGi bundles for LOCI software packages"/>
 
   <!--
@@ -88,6 +95,7 @@ Type "ant -p" for a list of targets.
       findbugs-ome-plugins,
       findbugs-scifio,
       findbugs-scifio-devel,
+      findbugs-scifio-tools,
       findbugs-tests"
     description="run findbugs on most components"/>
 
@@ -108,7 +116,11 @@ Type "ant -p" for a list of targets.
       clean-poi-loci,
       clean-scifio,
       clean-scifio-devel,
-      clean-tests"
+      clean-scifio-tools,
+      clean-specification,
+      clean-tests,
+      clean-turbojpeg,
+      clean-xsd-fu"
     description="remove all build files">
     <delete dir="${artifact.dir}"/>
     <delete dir="build"/>
@@ -129,7 +141,10 @@ Type "ant -p" for a list of targets.
       test-poi-loci,
       test-scifio,
       test-scifio-devel,
-      test-tests"
+      test-scifio-tools,
+      test-specification,
+      test-tests,
+      test-turbojpeg"
     description="test all components">
   </target>
 
@@ -330,7 +345,7 @@ Type "ant -p" for a list of targets.
 
   <!-- OME-XML Java library -->
 
-  <target name="deps-ome-xml"/>
+  <target name="deps-ome-xml" depends="ome-xml-src"/>
 
   <target name="compile-ome-xml" depends="deps-ome-xml"
     description="compile classes for OME-XML Java library">
@@ -402,7 +417,9 @@ Type "ant -p" for a list of targets.
     depends="jar-jai,
       jar-loci-legacy,
       jar-lwf-stubs,
-      jar-ome-xml"/>
+      jar-ome-xml,
+      jar-turbojpeg,
+      metadata-src"/>
 
   <target name="compile-scifio" depends="deps-scifio"
     description="compile classes for SCIFIO">
@@ -482,6 +499,52 @@ Type "ant -p" for a list of targets.
   <target name="test-scifio-devel" depends="jar-scifio-devel"
     description="compile and run tests for SCIFIO-devel">
     <ant dir="components/scifio-devel" target="test"/>
+  </target>
+
+  <!-- SCIFIO tools -->
+
+  <target name="deps-scifio-tools"
+    depends="jar-common,
+      jar-jai,
+      jar-lwf-stubs,
+      jar-ome-xml,
+      jar-formats,
+      jar-scifio"/>
+
+  <target name="compile-scifio-tools" depends="deps-scifio-tools"
+    description="compile classes for SCIFIO tools">
+    <ant dir="components/scifio-tools" target="scifio-tools.compile"/>
+  </target>
+
+  <target name="jar-scifio-tools" depends="deps-scifio-tools"
+    description="generate JAR file for SCIFIO tools">
+    <ant dir="components/scifio-tools" target="scifio-tools.jar"/>
+  </target>
+
+  <target name="osgi-scifio-tools" depends="jar-scifio-tools"
+    description="generate OSGi bundle for SCIFIO tools">
+    <ant dir="components/scifio-tools" target="scifio-tools.osgi"/>
+  </target>
+
+  <target name="findbugs-scifio-tools" depends="jar-scifio-tools"
+    description="run findbugs on SCIFIO tools">
+    <ant dir="components/scifio-tools" target="scifio-tools.findbugs"/>
+  </target>
+
+  <target name="clean-scifio-tools"
+    depends="clean-common,
+      clean-jai,
+      clean-lwf-stubs,
+      clean-ome-xml,
+      clean-scifio,
+      clean-formats"
+    description="remove build files for SCIFIO tools">
+    <ant dir="components/scifio-tools" target="scifio-tools.clean"/>
+  </target>
+
+  <target name="test-scifio-tools" depends="jar-scifio-tools, testing-deps"
+    description="compile and run tests for SCIFIO tools">
+    <ant dir="components/scifio-tools" target="test"/>
   </target>
 
   <!-- Bio-Formats -->
@@ -809,6 +872,35 @@ Type "ant -p" for a list of targets.
     <ant dir="components/test-suite" target="test"/>
   </target>
 
+  <!-- Turbojpeg -->
+
+  <target name="deps-turbojpeg" depends=""/>
+
+  <target name="compile-turbojpeg" depends="deps-turbojpeg"
+    description="compile classes for Turbojpeg Java bindings">
+    <ant dir="components/turbojpeg" target="turbojpeg.compile"/>
+  </target>
+
+  <target name="jar-turbojpeg" depends="deps-turbojpeg"
+    description="generate JAR file for Turbojpeg Java bindings">
+    <ant dir="components/turbojpeg" target="jar"/>
+  </target>
+
+  <target name="osgi-turbojpeg" depends="jar-turbojpeg"
+    description="generate OSGi bundle for Turbojpeg Java bindings">
+    <ant dir="components/turbojpeg" target="turbojpeg.osgi"/>
+  </target>
+
+  <target name="clean-turbojpeg"
+    description="remove build files for Turbojpeg Java bindings">
+    <ant dir="components/turbojpeg" target="turbojpeg.clean"/>
+  </target>
+
+  <target name="test-turbojpeg" depends="jar-turbojpeg, testing-deps"
+    description="compile and run tests for Turbojpeg Java bindings">
+    <ant dir="components/turbojpeg" target="test"/>
+  </target>
+
   <!-- Tool collections -->
 
   <target name="tools"
@@ -821,14 +913,18 @@ Type "ant -p" for a list of targets.
       jar-metakit,
       jar-ome-xml,
       jar-poi-loci,
-      jar-scifio"
+      jar-scifio,
+      jar-scifio-tools,
+      jar-specification"
     description="create JAR file encompassing several LOCI tools">
     <echo>----------=========== loci_tools ===========----------</echo>
     <for list="${loci-tools.libraries}" param="jar" delimiter=" " trim="true">
       <sequential>
         <unjar src="${artifact.dir}/@{jar}" dest="${loci-tools.dir}">
           <patternset>
-            <exclude name="META-INF/**"/>
+            <exclude name="META-INF/*"/>
+            <exclude name="META-INF/maven/**"/>
+            <exclude name="META-INF/services/**"/>
           </patternset>
         </unjar>
       </sequential>
@@ -851,7 +947,9 @@ Type "ant -p" for a list of targets.
       <sequential>
         <unjar src="${artifact.dir}/@{jar}" dest="${ome-tools.dir}">
           <patternset>
-            <exclude name="META-INF/**"/>
+            <exclude name="META-INF/*"/>
+            <exclude name="META-INF/maven/**"/>
+            <exclude name="META-INF/services/**"/>
           </patternset>
         </unjar>
       </sequential>
@@ -864,8 +962,38 @@ Type "ant -p" for a list of targets.
     <delete dir="${ome-tools.dir}"/>
   </target>
 
+  <!-- Xsd-Fu -->
+  <target name="clean-xsd-fu"
+    description="remove build files for Xsd-Fu">
+    <ant dir="components/xsd-fu" target="xsd-fu.clean"/>
+  </target>
+
+  <target name="ome-xml-src"
+    description="Generate sources using Xsd-Fu">
+    <ant dir="components/ome-xml" target="generate-source"/>
+  </target>
+
+  <target name="metadata-src"
+    description="Generate sources using Xsd-Fu">
+    <ant dir="components/scifio" target="generate-source"/>
+  </target>
+
+  <!-- Specification -->
+  <target name="jar-specification"
+    description="create jar for Specification">
+    <ant dir="components/specification" target="jar"/>
+  </target>
+  <target name="test-specification"
+    description="run tests for Specification">
+    <ant dir="components/specification" target="test"/>
+  </target>
+  <target name="clean-specification"
+    description="remove build files for Specification">
+    <ant dir="components/specification" target="clean"/>
+  </target>
+
   <!-- HACK - limit OS to *nix due to file permission issues -->
-  <target name="dist-bftools" if="isUnix">
+  <target name="dist-bftools" if="isUnix" description="zip the command line tools bundle">
     <echo>----------=========== bftools ===========----------</echo>
     <!--
     <zip destfile="${artifact.dir}/bftools.zip"
@@ -883,6 +1011,13 @@ Type "ant -p" for a list of targets.
   </target>
 
   <!-- Matlab -->
+  <target name="dist-matlab" if="isUnix" description="zip the Matlab functions bundle">
+    <echo>----------=========== bfmatlab ===========----------</echo>
+    <zip destfile="${artifact.dir}/bfmatlab.zip">
+      <zipfileset dir="${root.dir}/components/bio-formats/matlab" includes="**/*"/>
+    </zip>
+  </target>
+
   <target name="test-matlab" description="run Matlab tests"
 	depends="tools">
 

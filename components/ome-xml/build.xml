@@ -10,5 +10,49 @@ Type "ant -p" for a list of targets.
   <description>Build file for OME-XML Java library project</description>
   <property name="root.dir" location="../.."/>
   <import file="${root.dir}/ant/java.xml"/>
+  <import file="${root.dir}/ant/xsd-fu.xml"/>
   <property file="build.properties"/>
+
+  <target name="generate-source">
+    <property name="xsdfu.modelpath" value="${gensrc.dir}/ome/xml/model"/>
+    <property name="xsdfu.enumpath" value="${gensrc.dir}/ome/xml/model/enums"/>
+    <property name="xsdfu.handlerpath" value="${gensrc.dir}/ome/xml/model/enums/handlers"/>
+
+    <delete dir="${xsdfu.modelpath}"/>
+    <delete dir="${xsdfu.enumpath}"/>
+    <delete dir="${xsdfu.handlerpath}"/>
+
+    <!-- Generate the OME model object classes -->
+    <xsd_fu package="ome.xml.model" lang="Java" output="${xsdfu.modelpath}">
+      <arg value="java_classes"/>
+    </xsd_fu>
+
+    <!-- Generate the OME model enumeration classes -->
+    <xsd_fu package="ome.xml.model.enums" lang="Java" output="${xsdfu.enumpath}">
+      <arg value="enum_types"/>
+    </xsd_fu>
+
+    <!-- Generate the handlers for the OME model enumeration classes -->
+    <xsd_fu package="ome.xml.model.enums.handlers" lang="Java" output="${xsdfu.handlerpath}">
+      <arg value="enum_handlers"/>
+    </xsd_fu>
+  </target>
+
+  <target name="test" depends="jar" description="run tests">
+    <!-- NOTE: Overrides default "test" target from java.xml -->
+    <copy tofile="${build.dir}/testng.xml" overwrite="true"
+      file="${tests.dir}/ome/xml/utests/testng.xml"/>
+    <testng failureProperty="failedTest">
+      <classpath>
+        <pathelement location="${root.dir}/tools/"/><!-- log4j.properties -->
+        <pathelement location="${test-classes.dir}"/>
+        <pathelement location="${classes.dir}"/>
+        <pathelement path="${component.runtime-cp}"/>
+      </classpath>
+      <xmlfileset file="${build.dir}/testng.xml"/>
+      <jvmarg value="-mx${testng.memory}"/>
+    </testng>
+    <fail if="failedTest"/>
+  </target>
+
 </project>

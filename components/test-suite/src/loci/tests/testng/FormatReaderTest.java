@@ -2,7 +2,7 @@
  * #%L
  * OME Bio-Formats manual and automated test suite.
  * %%
- * Copyright (C) 2006 - 2012 Open Microscopy Environment:
+ * Copyright (C) 2006 - 2013 Open Microscopy Environment:
  *   - Board of Regents of the University of Wisconsin-Madison
  *   - Glencoe Software, Inc.
  *   - University of Dundee
@@ -418,6 +418,50 @@ public class FormatReaderTest {
         success = imageCount == z * c * t;
         msg = "series #" + i + ": imageCount=" + imageCount +
           ", z=" + z + ", c=" + c + ", t=" + t;
+      }
+    }
+    catch (Throwable t) {
+      LOGGER.info("", t);
+      success = false;
+    }
+    result(testName, success, msg);
+  }
+
+  @Test(groups = {"all", "fast", "automated"})
+  public void testTileWidth() {
+    String testName = "testTileWidth";
+    if (!initFile()) result(testName, false, "initFile");
+
+    boolean success = true;
+    String msg = null;
+    try {
+      for (int i=0; i<reader.getSeriesCount() && success; i++) {
+        reader.setSeries(i);
+        int width = reader.getOptimalTileWidth();
+        success = width > 0;
+        msg = "series #" + i + ": tile width = " + width;
+      }
+    }
+    catch (Throwable t) {
+      LOGGER.info("", t);
+      success = false;
+    }
+    result(testName, success, msg);
+  }
+
+  @Test(groups = {"all", "fast", "automated"})
+  public void testTileHeight() {
+    String testName = "testTileHeight";
+    if (!initFile()) result(testName, false, "initFile");
+
+    boolean success = true;
+    String msg = null;
+    try {
+      for (int i=0; i<reader.getSeriesCount() && success; i++) {
+        reader.setSeries(i);
+        int height = reader.getOptimalTileHeight();
+        success = height > 0;
+        msg = "series #" + i + ": tile height = " + height;
       }
     }
     catch (Throwable t) {
@@ -1317,10 +1361,12 @@ public class FormatReaderTest {
         for (int i=0; i<maxFiles && success; i++) {
           // .xlog files in InCell 1000/2000 files may belong to more
           // than one dataset
-          if (file.toLowerCase().endsWith(".xdce") &&
-            !base[i].toLowerCase().endsWith(".xdce"))
-          {
-            continue;
+          if (reader.getFormat().equals("InCell 1000/2000")) {
+            if (!base[i].toLowerCase().endsWith(".xdce") &&
+              !base[i].toLowerCase().endsWith(".xml"))
+            {
+              continue;
+            }
           }
 
           // Volocity datasets can only be detected with the .mvd2 file
@@ -1353,9 +1399,23 @@ public class FormatReaderTest {
             continue;
           }
 
+          // SVS files in AFI datasets are detected as SVS
+          if (reader.getFormat().equals("Aperio AFI") &&
+            base[i].toLowerCase().endsWith(".svs"))
+          {
+            continue;
+          }
+
           if (reader.getFormat().equals("BD Pathway") &&
             (base[i].endsWith(".adf") || base[i].endsWith(".txt")) ||
             base[i].endsWith(".roi"))
+          {
+            continue;
+          }
+
+          // Hamamatsu VMS datasets cannot be detected with non-.vms files
+          if (reader.getFormat().equals("Hamamatsu VMS") &&
+            !base[i].toLowerCase().endsWith(".vms"))
           {
             continue;
           }
@@ -1419,6 +1479,13 @@ public class FormatReaderTest {
           if (reader.getFormat().equals("Prairie TIFF") &&
             base[i].toLowerCase().endsWith(".tif") &&
             r.getFormat().equals("OME-TIFF"))
+          {
+            r.close();
+            continue;
+          }
+
+          if (reader.getFormat().equals("Hamamatsu NDPIS") &&
+            r.getFormat().equals("Hamamatsu NDPI"))
           {
             r.close();
             continue;
@@ -1863,7 +1930,8 @@ public class FormatReaderTest {
               continue;
             }
 
-            if (result && r instanceof BDReader && readers[j] instanceof BMPReader)
+            if (result && r instanceof BDReader &&
+              readers[j] instanceof BMPReader)
             {
               continue;
             }
@@ -1917,7 +1985,37 @@ public class FormatReaderTest {
               continue;
             }
 
+            // AFI reader is not expected to pick up .svs files
+            if (r instanceof AFIReader && (readers[j] instanceof AFIReader ||
+              readers[j] instanceof SVSReader))
+            {
+              continue;
+            }
+
             if (!result && readers[j] instanceof MIASReader) {
+              continue;
+            }
+
+            if ((readers[j] instanceof NDPISReader ||
+              r instanceof NDPISReader) &&
+              used[i].toLowerCase().endsWith(".ndpi"))
+            {
+              continue;
+            }
+
+            // the JPEG reader can pick up JPEG files associated with a
+            // Hamamatsu VMS dataset
+            if (readers[j] instanceof JPEGReader &&
+              r instanceof HamamatsuVMSReader &&
+              used[i].toLowerCase().endsWith(".jpg"))
+            {
+              continue;
+            }
+
+            // the Hamamatsu VMS reader only picks up its .vms file
+            if (!result && !used[i].toLowerCase().endsWith(".vms") &&
+              r instanceof HamamatsuVMSReader)
+            {
               continue;
             }
 

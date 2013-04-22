@@ -2,7 +2,7 @@
  * #%L
  * OME SCIFIO package for reading and converting scientific file formats.
  * %%
- * Copyright (C) 2005 - 2012 Open Microscopy Environment:
+ * Copyright (C) 2005 - 2013 Open Microscopy Environment:
  *   - Board of Regents of the University of Wisconsin-Madison
  *   - Glencoe Software, Inc.
  *   - University of Dundee
@@ -268,9 +268,6 @@ public abstract class FormatReader extends FormatHandler
     key = key.trim();
 
     boolean string = value instanceof String || value instanceof Character;
-    boolean simple = string ||
-      value instanceof Number ||
-      value instanceof Boolean;
 
     // string value, if passed in value is a string
     String val = string ? String.valueOf(value) : null;
@@ -279,6 +276,9 @@ public abstract class FormatReader extends FormatHandler
       (saveOriginalMetadata && (getMetadataStore() instanceof OMEXMLMetadata)))
     {
       // filter out complex data types
+      boolean simple = string ||
+        value instanceof Number ||
+        value instanceof Boolean;
       if (!simple) return;
 
       // verify key & value are reasonable length
@@ -298,8 +298,12 @@ public abstract class FormatReader extends FormatHandler
         "&lt;", "&gt;", "&amp;", "<", ">", "&"
       };
       for (int i=0; i<invalidSequences.length; i++) {
-        key = key.replaceAll(invalidSequences[i], "");
-        if (string) val = val.replaceAll(invalidSequences[i], "");
+        if (key.indexOf(invalidSequences[i]) >= 0) {
+          key = key.replaceAll(invalidSequences[i], "");
+        }
+        if (string && val.indexOf(invalidSequences[i]) >= 0) {
+          val = val.replaceAll(invalidSequences[i], "");
+        }
       }
 
       // verify key & value are not empty
@@ -877,6 +881,7 @@ public abstract class FormatReader extends FormatHandler
       in = null;
       currentId = null;
       resolution = 0;
+      core = null;
     }
   }
 
@@ -1155,6 +1160,13 @@ public abstract class FormatReader extends FormatHandler
     return true;
   }
 
+  /* @see IFormatReader#getRequiredDirectories(String[]) */
+  public int getRequiredDirectories(String[] files)
+    throws FormatException, IOException
+  {
+    return 0;
+  }
+
   /* @see IFormatReader#getDatasetStructureDescription() */
   public String getDatasetStructureDescription() {
     return datasetDescription;
@@ -1316,6 +1328,7 @@ public abstract class FormatReader extends FormatHandler
 
   /* @see IFormatHandler#setId(String) */
   public void setId(String id) throws FormatException, IOException {
+    LOGGER.info("{} initializing {}", this.getClass().getSimpleName(), id);
     if (!id.equals(currentId)) {
       initFile(id);
 

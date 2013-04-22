@@ -82,6 +82,7 @@ loci.formats.in.NDPISReader           # ndpis
 loci.formats.in.PovrayReader          # df3
 loci.formats.in.IMODReader            # mod
 loci.formats.in.FakeReader            # fake
+loci.formats.in.AFIReader             # afi
 
 # multi-extension messes
 loci.formats.in.JEOLReader            # dat, img, par
@@ -148,6 +149,7 @@ loci.formats.in.SISReader             # tif
 loci.formats.in.DNGReader             # cr2, crw, jpg, thm, wav, tif?
 loci.formats.in.ZeissTIFFReader # tif
 loci.formats.in.LeicaSCNReader        # scn
+loci.formats.in.SlidebookTiffReader   # tiff
 
 # standard TIFF reader must go last (it accepts any TIFF)
 loci.formats.in.TiffDelegateReader    # tif, tiff
@@ -165,3 +167,4 @@ loci.formats.in.HRDGDFReader          # (no extension)
 loci.formats.in.HitachiReader         # txt, tif, jpg, bmp
 loci.formats.in.BrukerReader          # fid, acqp
 loci.formats.in.CanonRawReader        # cr2, crw, jpg, thm, wav
+loci.formats.in.OBFReader             # obf, msr

@@ -69,7 +69,18 @@
       <version>5.12.1</version>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <version>1.5.10</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
+
+  <properties>
+    <project.rootdir>${basedir}/../..</project.rootdir>
+  </properties>
 
   <build>
     <plugins>
@@ -90,6 +101,9 @@
           <suiteXmlFiles>
             <suiteXmlFile>test/loci/ome/utests/testng.xml</suiteXmlFile>
           </suiteXmlFiles>
+          <additionalClasspathElements>
+            <additionalClasspathElement>${basedir}/../../ant/</additionalClasspathElement>
+          </additionalClasspathElements>
         </configuration>
       </plugin>
       <plugin>
