@@ -40,6 +40,7 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import loci.common.DataTools;
@@ -362,15 +363,14 @@ public class OMETiffReader extends SubResolutionFormatReader {
   public String[] getSeriesUsedFiles(boolean noPixels) {
     FormatTools.assertId(currentId, true, 1);
     if (noPixels) return null;
-    final List<String> usedFiles = new ArrayList<>();
+    final LinkedHashSet<String> usedFiles = new LinkedHashSet<>();
     if (metadataFile != null) {
       usedFiles.add(metadataFile);
     }
     if (info != null && info[series] != null) {
       for (int i=0; i<info[series].length; i++) {
         if (info[series] != null && info[series][i] != null &&
-          info[series][i].id != null &&
-          !usedFiles.contains(info[series][i].id))
+          info[series][i].id != null)
         {
           usedFiles.add(info[series][i].id);
         }

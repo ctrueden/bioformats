@@ -305,8 +305,10 @@ public class ImagePlusReader implements StatusReporter {
     // place metadata key/value pairs in ImageJ's info field
     // if concatenating images only store metadata on first series
     if (!options.isConcatenate() || s == 0) {
+      /* NB: Stringification of metadata is super slow, due to sorting.
       final String metadata = process.getOriginalMetadata().toString();
       imp.setProperty("Info", metadata);
+      */
     }
     imp.setProperty(PROP_SERIES, s);
 
@@ -549,19 +551,21 @@ public class ImagePlusReader implements StatusReporter {
   private String constructImageTitle(IFormatReader r,
     String file, String seriesName, boolean groupFiles)
   {
-    String[] used = r.getUsedFiles();
     String title = file.substring(file.lastIndexOf(File.separator) + 1);
-    if (used.length > 1 && groupFiles) {
-      FilePattern fp = new FilePattern(new Location(file));
-      title = fp.getPattern();
-      if (title == null) {
-        title = file;
-        if (title.indexOf('.') != -1) {
-          title = title.substring(0, title.lastIndexOf("."));
-        }
-      }
-      title = title.substring(title.lastIndexOf(File.separator) + 1);
-    }
+		if (groupFiles) {
+			String[] used = r.getUsedFiles(); // NB: Slow for large file sets!
+			if (used.length > 1) {
+				FilePattern fp = new FilePattern(new Location(file));
+				title = fp.getPattern();
+				if (title == null) {
+					title = file;
+					if (title.indexOf('.') != -1) {
+						title = title.substring(0, title.lastIndexOf("."));
+					}
+				}
+				title = title.substring(title.lastIndexOf(File.separator) + 1);
+			}
+		}
     if (seriesName != null && !file.endsWith(seriesName) &&
       r.getSeriesCount() > 1)
     {
