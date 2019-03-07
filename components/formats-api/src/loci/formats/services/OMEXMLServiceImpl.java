@@ -213,7 +213,7 @@ public class OMEXMLServiceImpl extends AbstractService implements OMEXMLService
           update2003FC =
             XMLTools.getStylesheet(XSLT_2003FC, OMEXMLServiceImpl.class);
         }
-        transformed = XMLTools.transformXML(xml, update2003FC);
+        transformed = transform(xml, update2003FC);
       }
       else if (version.equals("2007-06")) {
         xml = verifyOMENamespace(xml);
@@ -222,7 +222,7 @@ public class OMEXMLServiceImpl extends AbstractService implements OMEXMLService
           update200706 =
             XMLTools.getStylesheet(XSLT_200706, OMEXMLServiceImpl.class);
         }
-        transformed = XMLTools.transformXML(xml, update200706);
+        transformed = transform(xml, update200706);
       }
       else if (version.equals("2008-02")) {
         xml = verifyOMENamespace(xml);
@@ -231,7 +231,7 @@ public class OMEXMLServiceImpl extends AbstractService implements OMEXMLService
           update200802 =
             XMLTools.getStylesheet(XSLT_200802, OMEXMLServiceImpl.class);
         }
-        transformed = XMLTools.transformXML(xml, update200802);
+        transformed = transform(xml, update200802);
       }
       else transformed = xml;
       LOGGER.debug("XML updated to at least 2008-09");
@@ -244,7 +244,7 @@ public class OMEXMLServiceImpl extends AbstractService implements OMEXMLService
           update200809 =
             XMLTools.getStylesheet(XSLT_200809, OMEXMLServiceImpl.class);
         }
-        transformed = XMLTools.transformXML(transformed, update200809);
+        transformed = transform(transformed, update200809);
       }
       LOGGER.debug("XML updated to at least 2009-09");
       LOGGER.trace("At least 2009-09 dump: {}", transformed);
@@ -256,7 +256,7 @@ public class OMEXMLServiceImpl extends AbstractService implements OMEXMLService
           update200909 =
             XMLTools.getStylesheet(XSLT_200909, OMEXMLServiceImpl.class);
         }
-        transformed = XMLTools.transformXML(transformed, update200909);
+        transformed = transform(transformed, update200909);
       }
       else transformed = xml;
       LOGGER.debug("XML updated to at least 2010-04");
@@ -269,7 +269,7 @@ public class OMEXMLServiceImpl extends AbstractService implements OMEXMLService
           update201004 =
             XMLTools.getStylesheet(XSLT_201004, OMEXMLServiceImpl.class);
         }
-        transformed = XMLTools.transformXML(transformed, update201004);
+        transformed = transform(transformed, update201004);
       }
       else transformed = xml;
       LOGGER.debug("XML updated to at least 2010-06");
@@ -281,7 +281,7 @@ public class OMEXMLServiceImpl extends AbstractService implements OMEXMLService
           update201006 =
             XMLTools.getStylesheet(XSLT_201006, OMEXMLServiceImpl.class);
         }
-        transformed = XMLTools.transformXML(transformed, update201006);
+        transformed = transform(transformed, update201006);
       }
       else transformed = xml;
       LOGGER.debug("XML updated to at least 2011-06");
@@ -293,7 +293,7 @@ public class OMEXMLServiceImpl extends AbstractService implements OMEXMLService
           update201106 =
             XMLTools.getStylesheet(XSLT_201106, OMEXMLServiceImpl.class);
         }
-        transformed = XMLTools.transformXML(transformed, update201106);
+        transformed = transform(transformed, update201106);
       }
       else transformed = xml;
       LOGGER.debug("XML updated to at least 2012-06");
@@ -305,7 +305,7 @@ public class OMEXMLServiceImpl extends AbstractService implements OMEXMLService
           update201206 =
             XMLTools.getStylesheet(XSLT_201206, OMEXMLServiceImpl.class);
         }
-        transformed = XMLTools.transformXML(transformed, update201206);
+        transformed = transform(transformed, update201206);
       }
       else transformed = xml;
       LOGGER.debug("XML updated to at least 2013-06");
@@ -317,7 +317,7 @@ public class OMEXMLServiceImpl extends AbstractService implements OMEXMLService
           update201306 =
             XMLTools.getStylesheet(XSLT_201306, OMEXMLServiceImpl.class);
         }
-        transformed = XMLTools.transformXML(transformed, update201306);
+        transformed = transform(transformed, update201306);
       }
       else transformed = xml;
       LOGGER.debug("XML updated to at least 2015-01");
@@ -329,15 +329,13 @@ public class OMEXMLServiceImpl extends AbstractService implements OMEXMLService
           update201501 =
             XMLTools.getStylesheet(XSLT_201501, OMEXMLServiceImpl.class);
         }
-        transformed = XMLTools.transformXML(transformed, update201501);
+        transformed = transform(transformed, update201501);
       }
       else transformed = xml;
       LOGGER.debug("XML updated to at least 2016-06");
 
       // fix namespaces
-      transformed = transformed.replaceAll("<ns.*?:", "<");
-      transformed = transformed.replaceAll("xmlns:ns.*?=", "xmlns:OME=");
-      transformed = transformed.replaceAll("</ns.*?:", "</");
+      transformed = fixNamespaces(transformed);
       LOGGER.trace("Transformed XML dump: {}", transformed);
       return transformed;
     }
@@ -1321,6 +1319,17 @@ public class OMEXMLServiceImpl extends AbstractService implements OMEXMLService
     }
 
     return null;
+  }
+
+  private String transform(final String xml, final Templates xslt) throws IOException {
+    return fixNamespaces(XMLTools.transformXML(xml, xslt));
+  }
+
+  private String fixNamespaces(String xml) {
+    xml = xml.replaceAll("<ns.*?:", "<");
+    xml = xml.replaceAll("xmlns:ns.*?=", "xmlns:OME=");
+    xml = xml.replaceAll("</ns.*?:", "</");
+    return xml;
   }
 
 }
