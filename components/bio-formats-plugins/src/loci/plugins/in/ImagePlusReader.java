@@ -553,6 +553,7 @@ public class ImagePlusReader implements StatusReporter {
   {
     String title = file.substring(file.lastIndexOf(File.separator) + 1);
 		if (groupFiles) {
+			System.out.println("======> CALLING getUsedFiles :-("); //TEMP
 			String[] used = r.getUsedFiles(); // NB: Slow for large file sets!
 			if (used.length > 1) {
 				FilePattern fp = new FilePattern(new Location(file));
